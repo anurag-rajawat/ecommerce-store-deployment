@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  catalog-service:
+    container_name: catalog-service
+    image: catalog-service:1.0
+    depends_on:
+      - store-mongo
+    ports:
+      - 9001:9001
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://store-mongo:27017/product_catalog
+
+  store-mongo:
+    container_name: store-mongo
+    image: mongo:6.0
+    ports:
+      - 27017:27017
+    restart: always
