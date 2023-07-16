@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: store-mongo
+  labels:
+    db: store-mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      db: store-mongo
+  template:
+    metadata:
+      labels:
+        db: store-mongo
+    spec:
+      containers:
+        - name: store-mongo
+          image: mongo:6.0
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: store-mongo
+  labels:
+    db: store-mongo
+spec:
+  type: ClusterIP
+  selector:
+    db: store-mongo
+  ports:
+    - port: 27017
+      targetPort: 27017
+      protocol: TCP
