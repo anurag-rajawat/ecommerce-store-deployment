@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: store-redis
+  labels:
+    db: store-redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      db: store-redis
+  template:
+    metadata:
+      name: store-redis
+      labels:
+        db: store-redis
+    spec:
+      containers:
+        - name: store-redis
+          image: redis:7.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 100m
+              memory: 50Mi
+            limits:
+              cpu: 200m
+              memory: 100Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: store-redis
+  labels:
+    db: store-redis
+spec:
+  selector:
+    db: store-redis
+  type: ClusterIP
+  ports:
+    - port: 6379
+      targetPort: 6379
+      protocol: TCP

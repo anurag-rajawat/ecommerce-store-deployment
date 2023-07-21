@@ -22,9 +22,27 @@ services:
       - SPRING_DATA_MONGODB_URI=mongodb://store-mongo:27017/product_orders
       - STORE_CATALOG_SERVICE_URI=http://catalog-service:9001
 
+  edge-service:
+    container_name: edge-service
+    image: anuragrajawat/edge-service:0.0.1-SNAPSHOT
+    depends_on:
+      - store-redis
+    ports:
+      - "9000:9000"
+    environment:
+      - SPRING_DATA_REDIS_HOST=store-redis
+      - CATALOG_SERVICE_URL=http://catalog-service
+      - ORDER_SERVICE_URL=http://order-service
+
   store-mongo:
     container_name: store-mongo
     image: mongo:6.0
     ports:
       - "27017:27017"
     restart: always
+
+  store-redis:
+    container_name: store-redis
+    image: redis:7.0
+    ports:
+      - "6379:6379"
