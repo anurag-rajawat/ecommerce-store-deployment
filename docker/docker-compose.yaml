@@ -11,6 +11,17 @@ services:
     environment:
       - SPRING_DATA_MONGODB_URI=mongodb://store-mongo:27017/product_catalog
 
+  order-service:
+    container_name: order-service
+    image: anuragrajawat/order-service:0.0.1-SNAPSHOT
+    depends_on:
+      - store-mongo
+    ports:
+      - "9002:9002"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://store-mongo:27017/product_orders
+      - STORE_CATALOG_SERVICE_URI=http://catalog-service:9001
+
   store-mongo:
     container_name: store-mongo
     image: mongo:6.0
