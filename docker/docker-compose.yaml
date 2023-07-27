@@ -34,6 +34,16 @@ services:
       - CATALOG_SERVICE_URL=http://catalog-service
       - ORDER_SERVICE_URL=http://order-service
 
+  dispatcher-service:
+    container_name: dispatcher-service
+    image: anuragrajawat/dispatcher-service:0.0.1-SNAPSHOT
+    depends_on:
+      - store-rabbitmq
+    environment:
+      - SPRING_RABBITMQ_HOST=store-rabbitmq
+    ports:
+      - "9003:9003"
+
   store-mongo:
     container_name: store-mongo
     image: mongo:6.0
@@ -46,3 +56,12 @@ services:
     image: redis:7.0
     ports:
       - "6379:6379"
+
+  store-rabbitmq:
+    container_name: store-rabbitmq
+    image: rabbitmq:3.12-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
